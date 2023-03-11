@@ -1,6 +1,7 @@
 package com.domanski.juniorofferproject.domain.loginandregister;
 
 import com.domanski.juniorofferproject.domain.loginandregister.dto.RegisterCredential;
+import com.domanski.juniorofferproject.domain.loginandregister.dto.RegisteredUserDto;
 import com.domanski.juniorofferproject.domain.loginandregister.dto.UserDto;
 import org.junit.jupiter.api.Test;
 
@@ -19,13 +20,14 @@ class LoginAndRegisterFacadeTest {
         //given
         RegisterCredential userToRegister = prepareCorrectRegisterCredentials();
         //when
-        UserDto result = loginAndRegisterFacade.register(userToRegister);
+        RegisteredUserDto result = loginAndRegisterFacade.register(userToRegister);
         //then
         assertThat(result.username()).isEqualTo("Username");
+        assertThat(result.created()).isTrue();
     }
 
     @Test
-    public void should_throw_incorrect_password_exception_when_user_gave_incorrect_register_data() {
+    public void should_throw_incorrect_password_exception_when_user_gave_not_identical_password() {
         //given
         RegisterCredential userToRegister = prepareIncorrectUserRegisterData();
         // ...
@@ -44,7 +46,7 @@ class LoginAndRegisterFacadeTest {
     }
 
     @Test
-    public void should_throw_user_not_found_exception_when_user_is_not_in_database() {
+    public void should_throw_user_not_found_exception_when_user_no_exist_in_database() {
         //given
         String givenUserName = "Username";
         // ...
