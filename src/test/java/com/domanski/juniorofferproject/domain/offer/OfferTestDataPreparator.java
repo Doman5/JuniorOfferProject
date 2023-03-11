@@ -1,14 +1,14 @@
 package com.domanski.juniorofferproject.domain.offer;
 
 import com.domanski.juniorofferproject.domain.offer.dto.DownloadedOffer;
-import com.domanski.juniorofferproject.domain.offer.dto.OfferFromUser;
+import com.domanski.juniorofferproject.domain.offer.dto.OfferRequest;
 
 import java.util.List;
 
 class OfferTestDataPreparator {
 
-    static OfferFromUser prepareOfferFromUser() {
-        return OfferFromUser.builder()
+    static OfferRequest prepareOfferFromUser() {
+        return OfferRequest.builder()
                 .companyName("User's company")
                 .jobTittle("User's job tittle")
                 .jobUrl("https://www.test-offer.pl/User's-job-title")

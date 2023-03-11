@@ -1,12 +1,12 @@
 package com.domanski.juniorofferproject.domain.offer;
 
 import com.domanski.juniorofferproject.domain.offer.dto.DownloadedOffer;
-import com.domanski.juniorofferproject.domain.offer.dto.OfferDto;
-import com.domanski.juniorofferproject.domain.offer.dto.OfferFromUser;
+import com.domanski.juniorofferproject.domain.offer.dto.OfferResponse;
+import com.domanski.juniorofferproject.domain.offer.dto.OfferRequest;
 
 class OfferMapper {
-    public static OfferDto mapFromOffer(Offer offer) {
-        return OfferDto.builder()
+    public static OfferResponse mapFromOffer(Offer offer) {
+        return OfferResponse.builder()
                 .offerUrl(offer.offerUrl())
                 .companyName(offer.companyName())
                 .jobTittle(offer.jobTittle())
@@ -14,7 +14,7 @@ class OfferMapper {
                 .build();
     }
 
-    public static Offer mapFromUserNewOffer(OfferFromUser userNewOffer) {
+    public static Offer mapFromUserNewOffer(OfferRequest userNewOffer) {
         return Offer.builder()
                 .offerUrl(userNewOffer.jobUrl())
                 .companyName(userNewOffer.companyName())

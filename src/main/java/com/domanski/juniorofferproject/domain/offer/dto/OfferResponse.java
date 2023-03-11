@@ -3,7 +3,7 @@ package com.domanski.juniorofferproject.domain.offer.dto;
 import lombok.Builder;
 
 @Builder
-public record OfferFromUser(String jobUrl,
+public record OfferResponse(String offerUrl,
                             String jobTittle,
                             String companyName,
                             String salary) {

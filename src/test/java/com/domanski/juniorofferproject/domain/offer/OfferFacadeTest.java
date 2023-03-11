@@ -1,7 +1,7 @@
 package com.domanski.juniorofferproject.domain.offer;
 
-import com.domanski.juniorofferproject.domain.offer.dto.OfferDto;
-import com.domanski.juniorofferproject.domain.offer.dto.OfferFromUser;
+import com.domanski.juniorofferproject.domain.offer.dto.OfferResponse;
+import com.domanski.juniorofferproject.domain.offer.dto.OfferRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -31,7 +31,7 @@ class OfferFacadeTest {
         given(offerDownloader.downloadOffers()).willReturn(prepareDownloadedOffersListWithThreeOffers());
         offerFacade.downloadNewOffersAndSaveThemIfNotExist();
         //when
-        List<OfferDto> result = offerFacade.findAllOffers();
+        List<OfferResponse> result = offerFacade.findAllOffers();
         //then
         assertThat(result).hasSize(3);
     }
@@ -43,8 +43,8 @@ class OfferFacadeTest {
                 .willReturn(prepareDownloadedOffersListWithThreeOffers())
                 .willReturn(prepareDownloadedOffersListWithFourOffers());
         //when
-        List<OfferDto> firstOfferDownload = downloadNewOffersAndFindThem();
-        List<OfferDto> secondOfferDownload = downloadNewOffersAndFindThem();
+        List<OfferResponse> firstOfferDownload = downloadNewOffersAndFindThem();
+        List<OfferResponse> secondOfferDownload = downloadNewOffersAndFindThem();
         //then
         assertThat(firstOfferDownload).hasSize(3);
         assertThat(secondOfferDownload).hasSize(4);
@@ -58,7 +58,7 @@ class OfferFacadeTest {
                 .willReturn(prepareDownloadedOffersListWithThreeOffers());
         offerFacade.downloadNewOffersAndSaveThemIfNotExist();
         //when
-        OfferDto result = offerFacade.findOfferById(givenId);
+        OfferResponse result = offerFacade.findOfferById(givenId);
         //then
         assertThat(result.jobTittle()).isEqualTo("job 2");
         assertThat(result.companyName()).isEqualTo("company 2");
@@ -76,9 +76,9 @@ class OfferFacadeTest {
     @Test
     public void should_saved_offer_from_user() {
         //given
-        OfferFromUser offerFromUser = prepareOfferFromUser();
+        OfferRequest offerFromUser = prepareOfferFromUser();
         //when
-        OfferDto result = offerFacade.saveOffer(offerFromUser);
+        OfferResponse result = offerFacade.saveOffer(offerFromUser);
         //then
         assertThat(result).isNotNull();
         assertThat(result.companyName()).isEqualTo("User's company");
@@ -87,7 +87,7 @@ class OfferFacadeTest {
         assertThat(result.offerUrl()).isEqualTo("https://www.test-offer.pl/User's-job-title");
     }
 
-    private List<OfferDto> downloadNewOffersAndFindThem() {
+    private List<OfferResponse> downloadNewOffersAndFindThem() {
         offerFacade.downloadNewOffersAndSaveThemIfNotExist();
         return offerFacade.findAllOffers();
     }
