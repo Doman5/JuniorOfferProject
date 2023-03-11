@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class LoginAndRegisterFacade {
 
-    public static final boolean CREATED_USER = true;
     private UserRepository userRepository;
     private PasswordComparator passwordChecker;
 
@@ -17,13 +16,12 @@ public class LoginAndRegisterFacade {
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
     }
 
-    public RegisteredUserDto register(RegisterCredential registerCredential) {
+    public UserDto register(RegisterCredential registerCredential) {
         if(!passwordChecker.checkIfPasswordsAreIdentical(registerCredential)) {
             throw new IncorrectPasswordException("Password are not identical!");
         }
-
         User userToSave = UserMapper.mapFromRegisterCredentials(registerCredential);
         User savedUser = userRepository.save(userToSave);
-        return new RegisteredUserDto(savedUser.id(), CREATED_USER, savedUser.username());
+        return UserMapper.mapFromUser(savedUser);
     }
 }

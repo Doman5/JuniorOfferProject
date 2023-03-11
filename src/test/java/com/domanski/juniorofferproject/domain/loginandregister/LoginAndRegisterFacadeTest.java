@@ -19,14 +19,13 @@ class LoginAndRegisterFacadeTest {
         //given
         RegisterCredential userToRegister = prepareCorrectRegisterCredentials();
         //when
-        RegisteredUserDto result = loginAndRegisterFacade.register(userToRegister);
+        UserDto result = loginAndRegisterFacade.register(userToRegister);
         //then
         assertThat(result.username()).isEqualTo("Username");
-        assertThat(result.created()).isTrue();
     }
 
     @Test
-    public void should_throw_incorrect_password_exception_when_user_gave_not_identical_password() {
+    public void should_throw_incorrect_password_exception_when_user_gave_incorrect_register_data() {
         //given
         RegisterCredential userToRegister = prepareIncorrectUserRegisterData();
         // ...
@@ -45,7 +44,7 @@ class LoginAndRegisterFacadeTest {
     }
 
     @Test
-    public void should_throw_user_not_found_exception_when_user_no_exist_in_database() {
+    public void should_throw_user_not_found_exception_when_user_is_not_in_database() {
         //given
         String givenUserName = "Username";
         // ...
