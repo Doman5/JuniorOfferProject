@@ -8,17 +8,17 @@ class OfferMapper {
     public static OfferResponse mapFromOffer(Offer offer) {
         return OfferResponse.builder()
                 .offerUrl(offer.offerUrl())
-                .companyName(offer.companyName())
-                .jobTittle(offer.jobTittle())
+                .companyName(offer.company())
+                .jobTittle(offer.title())
                 .salary(offer.salary())
                 .build();
     }
 
     public static Offer mapFromUserNewOffer(OfferRequest userNewOffer) {
         return Offer.builder()
-                .offerUrl(userNewOffer.jobUrl())
-                .companyName(userNewOffer.companyName())
-                .jobTittle(userNewOffer.jobTittle())
+                .offerUrl(userNewOffer.offerUrl())
+                .company(userNewOffer.company())
+                .title(userNewOffer.title())
                 .salary(userNewOffer.salary())
                 .build();
     }
@@ -26,8 +26,8 @@ class OfferMapper {
     public static Offer mapFromDownloadedOffer(DownloadedOffer downloadedOffer) {
         return Offer.builder()
                 .offerUrl(downloadedOffer.offerUrl())
-                .companyName(downloadedOffer.companyName())
-                .jobTittle(downloadedOffer.jobTittle())
+                .company(downloadedOffer.company())
+                .title(downloadedOffer.title())
                 .salary(downloadedOffer.salary())
                 .build();
     }

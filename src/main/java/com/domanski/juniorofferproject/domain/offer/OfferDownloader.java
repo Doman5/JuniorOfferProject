@@ -4,6 +4,6 @@ import com.domanski.juniorofferproject.domain.offer.dto.DownloadedOffer;
 
 import java.util.List;
 
-interface OfferDownloader {
+public interface OfferDownloader {
     List<DownloadedOffer> downloadOffers();
 }
