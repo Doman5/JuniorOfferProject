@@ -18,8 +18,8 @@ public class OfferFacade {
                 .map(OfferMapper::mapFromDownloadedOffer)
                 .toList();
 
-        List<Offer> offersNotExistingInDatabase = offerExistingChecker.checkIfTheOffersExistingInTheDatabase(downloadedOffers);
-        offerRepository.saveAll(offersNotExistingInDatabase);
+        List<Offer> offersWhichNotExistingInDatabase = offerExistingChecker.checkIfTheOffersExistingInTheDatabase(downloadedOffers);
+        offerRepository.saveAll(offersWhichNotExistingInDatabase);
     }
 
     public List<OfferResponse> findAllOffers() {
