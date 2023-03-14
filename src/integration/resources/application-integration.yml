@@ -1,0 +1,9 @@
+offer:
+  offer-downloader:
+    http:
+      client:
+        config:
+          connectionTimeOut: 1000
+          readTimeOut: 1000
+          uri: http://localhost
+          port: 12312

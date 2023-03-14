@@ -9,9 +9,9 @@ class OfferTestDataPreparator {
 
     static OfferRequest prepareOfferFromUser() {
         return OfferRequest.builder()
-                .companyName("User's company")
-                .jobTittle("User's job tittle")
-                .jobUrl("https://www.test-offer.pl/User's-job-title")
+                .company("User's company")
+                .title("User's job tittle")
+                .offerUrl("https://www.test-offer.pl/User's-job-title")
                 .salary("3000 - 4000 zł")
                 .build();
     }
@@ -19,21 +19,21 @@ class OfferTestDataPreparator {
     static List<DownloadedOffer> prepareDownloadedOffersListWithThreeOffers() {
         return List.of(
                 DownloadedOffer.builder()
-                        .companyName("company 1")
+                        .company("company 1")
                         .offerUrl("url 1")
-                        .jobTittle("job 1")
+                        .title("job 1")
                         .salary("3000 - 4000")
                         .build(),
                 DownloadedOffer.builder()
-                        .companyName("company 2")
+                        .company("company 2")
                         .offerUrl("url 2")
-                        .jobTittle("job 2")
+                        .title("job 2")
                         .salary("2000 - 3000")
                         .build(),
                 DownloadedOffer.builder()
-                        .companyName("company 3")
+                        .company("company 3")
                         .offerUrl("url 3")
-                        .jobTittle("job 3")
+                        .title("job 3")
                         .salary("4000 - 5000")
                         .build());
     }
@@ -41,27 +41,27 @@ class OfferTestDataPreparator {
     static List<DownloadedOffer> prepareDownloadedOffersListWithFourOffers() {
         return List.of(
                 DownloadedOffer.builder()
-                        .companyName("company 1")
+                        .company("company 1")
                         .offerUrl("url 1")
-                        .jobTittle("job 1")
+                        .title("job 1")
                         .salary("3000 - 4000")
                         .build(),
                 DownloadedOffer.builder()
-                        .companyName("company 2")
+                        .company("company 2")
                         .offerUrl("url 2")
-                        .jobTittle("job 2")
+                        .title("job 2")
                         .salary("2000 - 3000")
                         .build(),
                 DownloadedOffer.builder()
-                        .companyName("company 3")
+                        .company("company 3")
                         .offerUrl("url 3")
-                        .jobTittle("job 3")
+                        .title("job 3")
                         .salary("4000 - 5000")
                         .build(),
                 DownloadedOffer.builder()
-                        .companyName("company 4")
+                        .company("company 4")
                         .offerUrl("url 4")
-                        .jobTittle("job 4")
+                        .title("job 4")
                         .salary("9000 - 10000")
                         .build());
     }
