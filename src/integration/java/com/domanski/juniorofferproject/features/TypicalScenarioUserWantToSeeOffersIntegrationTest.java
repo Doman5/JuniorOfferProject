@@ -1,11 +1,27 @@
 package com.domanski.juniorofferproject.features;
 
 import com.domanski.juniorofferproject.BaseIntegrationTest;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
-public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseIntegrationTest {
+public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseIntegrationTest implements SampleJobOffers{
 
+    @Test
+    public void test( ) {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void user_want_to_see_offers_but_have_to_be_logged_in_and_external_server_should_have_some_offers() {
     //  step 1: there are no offers in external http server.
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-type", "application/json")
+                        .withBody(bodyWithZeroOffersJson())));
     //  step 2: scheduler ran 1st time and made Get to external server and system, added 0 offers to database.
     //  step 3: user tried to get jwt token by requesting Post /token with username=someUser, password=somePassword and system returned
     //  UNAUTHORIZED(401).
@@ -25,11 +41,5 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
     //  to database
     //  step 15: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 4 offers
     //  with ids: 1000, 2000, 3000 and 4000
-
-    @Test
-    public void test() {
-        //given
-        //when
-        //then
     }
 }
