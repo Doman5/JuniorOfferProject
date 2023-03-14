@@ -7,3 +7,9 @@ offer:
           readTimeOut: 1000
           uri: http://localhost
           port: 12312
+  scheduler:
+    request:
+      delay: PT1S
+
+scheduling:
+  enabled: false

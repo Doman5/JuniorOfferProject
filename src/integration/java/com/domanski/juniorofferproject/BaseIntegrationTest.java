@@ -17,7 +17,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
-@SpringBootTest(classes = JuniorofferprojectApplication.class)
+@SpringBootTest(classes = JuniorOfferProjectApplication.class)
 @ActiveProfiles("integration")
 @AutoConfigureMockMvc()
 @Testcontainers

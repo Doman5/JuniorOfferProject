@@ -1,25 +1,31 @@
 package com.domanski.juniorofferproject.domain.offer;
 
+import com.domanski.juniorofferproject.domain.offer.dto.DownloadedOffer;
 import com.domanski.juniorofferproject.domain.offer.dto.OfferResponse;
 import com.domanski.juniorofferproject.domain.offer.dto.OfferRequest;
 import lombok.AllArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
 public class OfferFacade {
+    public static final List<Offer> NO_NEW_OFFERS = null;
     private final OfferRepository offerRepository;
     private final OfferDownloader offerDownloader;
     private final OfferExistingChecker offerExistingChecker;
 
-    public void downloadNewOffersAndSaveThemIfNotExist() {
-        List<Offer> downloadedOffers = offerDownloader.downloadOffers()
-                .stream()
-                .map(OfferMapper::mapFromDownloadedOffer)
-                .toList();
+    public List<OfferResponse> downloadNewOffersAndSaveThemIfNotExist() {
+        List<DownloadedOffer> downloadedOffers = offerDownloader.downloadOffers();
+        List<Offer> noExistingOffers = offerExistingChecker.checkIfTheOffersExistingInTheDatabase(downloadedOffers);
+        List<Offer> savedOffers = offerRepository.saveAll(noExistingOffers);
+        if(savedOffers == NO_NEW_OFFERS) {
+            return Collections.emptyList();
+        }
 
-        List<Offer> offersWhichNotExistingInDatabase = offerExistingChecker.checkIfTheOffersExistingInTheDatabase(downloadedOffers);
-        offerRepository.saveAll(offersWhichNotExistingInDatabase);
+        return savedOffers.stream()
+                .map(OfferMapper::mapFromOffer)
+                .toList();
     }
 
     public List<OfferResponse> findAllOffers() {
