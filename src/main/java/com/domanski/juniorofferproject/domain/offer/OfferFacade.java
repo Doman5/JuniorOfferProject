@@ -38,7 +38,7 @@ public class OfferFacade {
     public OfferResponse findOfferById(String id) {
         return offerRepository.findById(id)
                 .map(OfferMapper::mapFromOffer)
-                .orElseThrow(() -> new OfferNotFoundException("Offer not found"));
+                .orElseThrow(() -> new OfferNotFoundException("Offer with id " + id + " not found"));
     }
 
     public OfferResponse saveOffer(OfferRequest userNewOffer) {
