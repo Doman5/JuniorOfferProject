@@ -44,15 +44,40 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //then
         assertThat(offerResponsesFromExternalService1).hasSize(0);
 
-        //  step 3: user tried to get jwt token by requesting Post /token with username=someUser, password=somePassword and system returned
-        //  UNAUTHORIZED(401).
-        //  step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401).
-        //  step 5: user made Post /register with username=someUser, password=somePassword and system register with status OK(200).
-        //  step 6: user tried get jwt token by requesting POST /token with username=someUSer, password=somePAssword and system
-        //  returned OK(200) and jwt token=AAAA.BBBB.CCCC
-        //  step 7: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 0 offers
-        //  step 8: there are 2 new offers in external HTTP server
-        //  step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
+
+        // step 3: user tried to get jwt token by requesting Post /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401).
+        // step 4: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401).
+        // step 5: user made Post /register with username=someUser, password=somePassword and system register with status OK(200).
+        // step 6: user tried get jwt token by requesting POST /token with username=someUSer, password=somePassword and system returned OK(200) and jwt token=AAAA.BBBB.CCCC
+        // step 7: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 0 offers
+        //given && when
+        MvcResult performGetOffersFirstTime = mockMvc.perform(MockMvcRequestBuilders.get("/offers")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String offersJsonTakenFirstTime = performGetOffersFirstTime.getResponse().getContentAsString();
+        List<OfferResponse> offerResponsesFromOfferController1 = objectMapper.readValue(offersJsonTakenFirstTime, new TypeReference<>() {
+        });
+        //then
+        assertThat(offerResponsesFromOfferController1).isEmpty();
+
+        // step 8: there are 2 new offers in external HTTP server
+        // given && when && then
+        wireMockServer.stubFor(WireMock.get("/offers")
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-type", "application/json")
+                        .withBody(bodyWithTwoOffersJson())));
+
+
+        // step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
+        //given && when
+        List<OfferResponse> offerResponsesFromExternalService2 = offerDownloadScheduler.DownloadOfferFromExternalServer();
+        //then
+        assertThat(offerResponsesFromExternalService2).hasSize(2);
+
+
         //  step 10: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 2 offers with
         //  ids: 1000 and 2000
 //        //gia
