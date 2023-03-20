@@ -53,7 +53,7 @@ class OfferFacadeTest {
     @Test
     public void should_return_offer_searcher_for_by_id() {
         //given
-        Long givenId = 2L;
+        String givenId = "2";
         given(offerDownloader.downloadOffers())
                 .willReturn(prepareDownloadedOffersListWithThreeOffers());
         offerFacade.downloadNewOffersAndSaveThemIfNotExist();
@@ -68,7 +68,7 @@ class OfferFacadeTest {
     @Test
     public void should_throw_offer_not_found_exception_when_offer_which_that_id_no_exist_in_database() {
         //given
-        Long givenId = 2L;
+        String givenId ="2";
         // ...
         assertThrows(OfferNotFoundException.class, () -> offerFacade.findOfferById(givenId), "Offer not found");
     }

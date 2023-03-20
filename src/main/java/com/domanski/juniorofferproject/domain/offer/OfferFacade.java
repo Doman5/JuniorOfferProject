@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class OfferFacade {
-    public static final List<Offer> NO_NEW_OFFERS = null;
+    public static final List<Offer> NO_NEW_OFFERS = Collections.emptyList();
     private final OfferRepository offerRepository;
     private final OfferDownloader offerDownloader;
     private final OfferExistingChecker offerExistingChecker;
@@ -35,7 +35,7 @@ public class OfferFacade {
                 .toList();
     }
 
-    public OfferResponse findOfferById(Long id) {
+    public OfferResponse findOfferById(String id) {
         return offerRepository.findById(id)
                 .map(OfferMapper::mapFromOffer)
                 .orElseThrow(() -> new OfferNotFoundException("Offer not found"));

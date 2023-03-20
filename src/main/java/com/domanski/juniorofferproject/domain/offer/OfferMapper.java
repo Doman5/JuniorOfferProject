@@ -7,6 +7,7 @@ import com.domanski.juniorofferproject.domain.offer.dto.OfferRequest;
 class OfferMapper {
     public static OfferResponse mapFromOffer(Offer offer) {
         return OfferResponse.builder()
+                .id(offer.id())
                 .offerUrl(offer.offerUrl())
                 .companyName(offer.company())
                 .jobTittle(offer.title())
