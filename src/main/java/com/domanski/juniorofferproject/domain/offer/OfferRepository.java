@@ -1,13 +1,9 @@
 package com.domanski.juniorofferproject.domain.offer;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-interface OfferRepository {
-    List<Offer> findAll();
-    Optional<Offer> findById(Long id);
-    Offer save(Offer offer);
-    List<Offer> saveAll(List<Offer> offers);
-
+@Repository
+interface OfferRepository extends MongoRepository<Offer, String> {
     boolean existsOfferByOfferUrl(String offerUrl);
 }
