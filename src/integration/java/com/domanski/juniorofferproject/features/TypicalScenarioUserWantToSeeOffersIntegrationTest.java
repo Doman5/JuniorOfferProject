@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,9 +81,6 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         //  step 10: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 2 offers with
         //  ids: 1000 and 2000
-//        //gia
-
-
         //  step 11: user made GET /offers/9999 and system returned NOT_FOUND(404) with message "Offer with id 9999 not found"
         // given
         String offerId = "9999";
@@ -106,5 +104,38 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
         //  to database
         //  step 15: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 4 offers
         //  with ids: 1000, 2000, 3000 and 4000
+
+
+        // step 16: user made Post /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and offer and system returned CREATED(201) with saved offer
+        //given && when
+        MvcResult performPostOffers = mockMvc.perform(post("/offers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "offerUrl": "offerUrl.com/java-junior",
+                                "title": "java junior",
+                                "company": "app company",
+                                "salary": "5000 - 6000"
+                                }
+                                """.trim()))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String responseOffersJson = performPostOffers.getResponse().getContentAsString();
+        OfferResponse offerResponse = objectMapper.readValue(responseOffersJson, OfferResponse.class);
+        //then
+        assertThat(offerResponse).isNotNull();
+
+
+        // step 17: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 3 offers
+        //given && when
+        MvcResult performGetOffersAfterUserAddOffer = mockMvc.perform(MockMvcRequestBuilders.get("/offers")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        String offersJsonTakenThirdTime = performGetOffersAfterUserAddOffer.getResponse().getContentAsString();
+        List<OfferResponse> offerResponsesFromOfferController3 = objectMapper.readValue(offersJsonTakenThirdTime, new TypeReference<>() {
+        });
+        //then
+        assertThat(offerResponsesFromOfferController3.size()).isEqualTo(3);
     }
 }
