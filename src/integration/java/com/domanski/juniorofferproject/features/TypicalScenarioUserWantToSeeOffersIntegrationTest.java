@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,10 +59,10 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .andReturn();
 
         String offersJsonTakenFirstTime = performGetOffersFirstTime.getResponse().getContentAsString();
-        List<OfferResponse> offerResponsesFromOfferController1 = objectMapper.readValue(offersJsonTakenFirstTime, new TypeReference<>() {
+        List<OfferResponse> offerResponsesWithoutAnyOffer = objectMapper.readValue(offersJsonTakenFirstTime, new TypeReference<>() {
         });
         //then
-        assertThat(offerResponsesFromOfferController1).isEmpty();
+        assertThat(offerResponsesWithoutAnyOffer).isEmpty();
 
         // step 8: there are 2 new offers in external HTTP server
         // given && when && then
@@ -74,9 +75,9 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         // step 9: scheduler ran 2nd time and made GET to external server and system added 2 new offers with ids: 1000 and 2000 to database
         //given && when
-        List<OfferResponse> offerResponsesFromExternalService2 = offerDownloadScheduler.DownloadOfferFromExternalServer();
+        List<OfferResponse> offerResponsesWithTwoOffers = offerDownloadScheduler.DownloadOfferFromExternalServer();
         //then
-        assertThat(offerResponsesFromExternalService2).hasSize(2);
+        assertThat(offerResponsesWithTwoOffers).hasSize(2);
 
 
         //  step 10: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 2 offers with
@@ -108,22 +109,30 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
 
         // step 16: user made Post /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and offer and system returned CREATED(201) with saved offer
         //given && when
-        MvcResult performPostOffers = mockMvc.perform(post("/offers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                "offerUrl": "offerUrl.com/java-junior",
-                                "title": "java junior",
-                                "company": "app company",
-                                "salary": "5000 - 6000"
-                                }
-                                """.trim()))
-                .andExpect(status().isCreated())
-                .andReturn();
-        String responseOffersJson = performPostOffers.getResponse().getContentAsString();
+        ResultActions performPostOffer = mockMvc.perform(post("/offers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "offerUrl": "https://offerUrl.com/java-junior",
+                        "title": "java junior",
+                        "company": "app company",
+                        "salary": "5000 - 6000"
+                        }
+                        """.trim()));
+
+        String responseOffersJson = performPostOffer.andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
         OfferResponse offerResponse = objectMapper.readValue(responseOffersJson, OfferResponse.class);
         //then
-        assertThat(offerResponse).isNotNull();
+        assertAll(
+                () -> assertThat(offerResponse.offerUrl()).isEqualTo("https://offerUrl.com/java-junior"),
+                () -> assertThat(offerResponse.jobTittle()).isEqualTo("java junior"),
+                () -> assertThat(offerResponse.companyName()).isEqualTo("app company"),
+                ()-> assertThat(offerResponse.salary()).isEqualTo("5000 - 6000"),
+                () -> assertThat(offerResponse.id()).isNotNull()
+        );
 
 
         // step 17: user made GET /offers with header"Authorization: Bearer AAAA.BBBB.CCCC" and system returned OK(200) with 3 offers
@@ -133,9 +142,9 @@ public class TypicalScenarioUserWantToSeeOffersIntegrationTest extends BaseInteg
                 .andExpect(status().isOk())
                 .andReturn();
         String offersJsonTakenThirdTime = performGetOffersAfterUserAddOffer.getResponse().getContentAsString();
-        List<OfferResponse> offerResponsesFromOfferController3 = objectMapper.readValue(offersJsonTakenThirdTime, new TypeReference<>() {
+        List<OfferResponse> offerResponsesWithThreeOffers = objectMapper.readValue(offersJsonTakenThirdTime, new TypeReference<>() {
         });
         //then
-        assertThat(offerResponsesFromOfferController3.size()).isEqualTo(3);
+        assertThat(offerResponsesWithThreeOffers.size()).isEqualTo(3);
     }
 }
