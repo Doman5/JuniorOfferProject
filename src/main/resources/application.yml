@@ -21,3 +21,9 @@ offer:
 
 scheduling:
   enabled: true
+
+app:
+  security:
+    expirationMs: 604800000
+    issuer: Job offer
+    secret: secret
